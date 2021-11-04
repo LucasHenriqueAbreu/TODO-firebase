@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de tarefas</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script>
+        firebase.initializeApp({
+            apiKey: "AIzaSyAWezP4ZlwcZuHhmZHt0A7WUZlvw-YekPY",
+            authDomain: "gerenciador-de-tarefas-c8064.firebaseapp.com",
+            projectId: "gerenciador-de-tarefas-c8064",
+            storageBucket: "gerenciador-de-tarefas-c8064.appspot.com",
+            messagingSenderId: "499142937151",
+            appId: "1:499142937151:web:2c6392f9922a0c889fc68a"
+        });
+    </script>
+    <script src="./src/tarefa.js"></script>
+    <script src="./src/tarefas.repository.js"></script>
+    <script src="./src/gerenciadorTarefas.controller.js"></script>
+    
+</head>
+
+<body>
+    <div>
+        <h1>Gerenciador de tarefas com Firebase e Cloud Firestore</h1>
+        <div class="formulario">
+            <input id="descricao" type="text" placeholder="Descrição da tarefa" />
+            <button onclick="salvar()">Salvar Tarefa</button>
+        </div>
+        <table class="containerTarefas">
+            <thead>
+                <tr>
+                    <th>Descricão</th>
+                    <th>Pronta</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</body>
+
+</html>
