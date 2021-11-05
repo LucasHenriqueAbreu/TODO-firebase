@@ -1,12 +1,16 @@
 const tarefaRepository = new TarefaRepository();
 
 function salvar() {
-    const descricao = document.getElementById('descricao').value;
-    const tarefa = { descricao: descricao, pronta: false };
-    tarefaRepository.create(tarefa).then((resultad) => {
-        alert('Tarefa cadastrada com sucesso.');
+    const inputDescricao = document.getElementById('descricao');
+    const descricao = inputDescricao.value;
+    const tarefa = { descricao, pronta: false };
+    tarefaRepository.create(tarefa).then((resultado) => {
+        tarefa.id = resultado;
+        const linhaTabela = criaLinhaTabela(tarefa);
+        addItensNaTabela(linhaTabela);
+        inputDescricao.value = '';
     }).catch((error) => {
-        alert('Não foi possível cadastrar a tarefa.');
+        alert(error);
     })
 }
 
@@ -14,25 +18,53 @@ function listagemDeTarefas() {
     tarefaRepository.list().then(tarefas => {
         montaTabela(tarefas);
     }).catch(error => {
-        alert('Nâo foi possível carregar as tarefas.');
+        alert(error);
     })
 }
 
 function montaTabela(tarefas) {
-    const corpoTabela = document.getElementsByTagName('tbody')[0];
     for (let i = 0; i < tarefas.length; i++) {
-        const tarefaVez = tarefas[i];
-        const linhaTabela = document.createElement('tr');
-        const celulaDescricao = document.createElement('td');
-        celulaDescricao.append(document.createTextNode(tarefaVez.descricao));
-        linhaTabela.append(celulaDescricao);
-
-        const celulaPronto = document.createElement('td');
-        celulaPronto.append(document.createTextNode(tarefaVez.pronta));
-        linhaTabela.append(celulaPronto);
-
-        corpoTabela.append(linhaTabela);
+        const tarefa = tarefas[i];
+        const linhaTabela = criaLinhaTabela(tarefa);
+        addItensNaTabela(linhaTabela);
     }
+}
+
+function addItensNaTabela(linhaDeTabela) {
+    const corpoTabela = document.getElementsByTagName('tbody')[0];
+    corpoTabela.append(linhaDeTabela);
+}
+
+function criaLinhaTabela(tarefa) {
+    const linhaTabela = criaLinha(tarefa);
+    const celulaDescricao = criaCedulaDescricao(tarefa);
+    linhaTabela.append(celulaDescricao);
+    const celulaPronto = criaCheckBoxUpdatePronta(tarefa);
+    linhaTabela.append(celulaPronto);
+    return linhaTabela;
+}
+
+function criaLinha() {
+    return document.createElement('tr');
+}
+
+function criaCedulaDescricao(tarefa) {
+    const celulaDescricao = document.createElement('td');
+    celulaDescricao.append(document.createTextNode(tarefa.descricao));
+    return celulaDescricao;
+}
+
+function criaCheckBoxUpdatePronta(tarefa) {
+    const celulaPronto = document.createElement('td');
+    const checkBox = document.createElement('input');
+    checkBox.type = 'checkbox';
+    checkBox.checked = tarefa.pronta;
+    checkBox.onchange = (ev) => {
+        tarefa.pronta = ev.target.checked;
+        tarefaRepository.update(tarefa, tarefa.id);
+    }
+    celulaPronto.append(checkBox);
+    return celulaPronto;
 }
 
 listagemDeTarefas();
